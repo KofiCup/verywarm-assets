@@ -26,13 +26,13 @@ namespace TerminalProfiles {
         // The current logged in user 
         private User user;
 
-        // This is a 'constant' – a fixed value that I use this in a few
+        // This is a 'constant' – a fixed value. I use this in a few
         // places in the program so I don't want to keep typing out 
         // new User("Guest"... etc everytime! Plus if I want to change it
         // I only have to change it in one place.
         User DEFAULT_USER = new User("Guest", "", ConsoleColor.Green);
 
-        // This method is the constructor, you can tell cos it has the same
+        // This method is the constructor, you can tell because it has the same
         // name as the class. It is called once and only once, when a new
         // instance of the class is created (e.g., new Program())
         // Its job is to do any set up that the class may need – in this case
@@ -57,13 +57,14 @@ namespace TerminalProfiles {
 
             // This method calls itself at the end which works like a loop,
             // keeping the program running until you type exit.
-            // A function/method that calls itself is called recursive.
+            // A function that calls itself is called a recursive function.
             // Recursion can get very hard to understand but this example is
             // the simplest type.
             program.ParseInput();
         }
 
         private void ParseInput() {
+            // if the user is the default (guest) user, then no one is logged in (so login)
             if (this.user == DEFAULT_USER) this.Login();
 
             Console.ForegroundColor = this.user.profile.color;
@@ -121,6 +122,15 @@ namespace TerminalProfiles {
 
             // Check both username and password at the same time.
             // Using List gives us the ability to use this handy Find method
+            // This bit is probably the hardest to understand:
+            //
+            //  user => user.userName.ToLower() == userName?.ToLower() && user.password == password
+            // 
+            // So don't feel the need to fully understand it yet!
+            // It's a function that is being applied to each User in the User list.
+            // If the password and (lowercase) username of the stored user matches the input,
+            // that function returns `true`.
+            // `Find` is a method of `List`, that returns the first item whos function returned true for.
             User? foundUser = this.users.Find(user => user.userName.ToLower() == userName?.ToLower() && user.password == password);
 
             if (foundUser == null) {
@@ -137,14 +147,14 @@ namespace TerminalProfiles {
             // You could make your own Write method that always checks the color
             // first then uses Console.WriteLine internally. Like this:
             //
-            //  static void Write(string message ) {
+            //  private void Write(string message ) {
             //      Console.ForegroundColor = this.user.profile.color;
             //      Console.WriteLine(message);
             //  }
             // 
             // Then use it like this:
             // 
-            //  Program.Write("My message");
+            //  this.Write("My message");
             //
             Console.ForegroundColor = this.user.profile.color;
 
